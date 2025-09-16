@@ -1,0 +1,53 @@
+{
+  "name": "smm-panel-ipv6-proxy",
+  "version": "1.0.0",
+  "description": "Dynamic IPv6 proxy server with subnet selection. Rotate IPs for social media marketing, SMM panels, and automation tools. By HeySMMReseller.com",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ipv6",
+    "proxy",
+    "proxy-server",
+    "ipv6-proxy",
+    "smm-panel",
+    "smm",
+    "dynamic-proxy",
+    "subnet",
+    "nodejs-proxy",
+    "websocket",
+    "http-proxy",
+    "https-proxy",
+    "rotating-proxy",
+    "heysmmreseller"
+  ],
+  "author": "HeySMMProvider <contact@heysmmreseller.com> (https://heysmmreseller.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heysmmprovider/smm-panel-ipv6-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/heysmmprovider/smm-panel-ipv6-proxy/issues"
+  },
+  "homepage": "https://github.com/heysmmprovider/smm-panel-ipv6-proxy#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2",
+    "http-string-parser": "^0.0.6",
+    "lodash": "^4.17.21",
+    "net": "^1.0.2",
+    "socket.io": "^4.7.4",
+    "url": "^0.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
