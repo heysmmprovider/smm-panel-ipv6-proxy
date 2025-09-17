@@ -1,4 +1,4 @@
-# 🚀 Dynamic IPv6 Proxy Server - Power Your SMM Panel Operations
+# 🔌 IPv6 Slave Connector for SMM Panel Proxy
 
 [![heysmmreseller](https://img.shields.io/badge/Powered%20By-HeySMMReseller-blue)](https://heysmmreseller.com)
 [![SMM Provider](https://img.shields.io/badge/SMM-Provider-green)](https://heysmmreseller.com)
@@ -7,9 +7,9 @@
 [![Twitter Followers](https://img.shields.io/badge/Twitter-X%20Followers-black)](https://heysmmreseller.com)
 [![TikTok Services](https://img.shields.io/badge/TikTok-Services-red)](https://heysmmreseller.com)
 
-## 🎯 Perfect for SMM Panel Providers & Resellers
+## 🎯 IPv6 Tunnel Connector for SMM Operations
 
-This enterprise-grade Dynamic IPv6 Proxy Server is designed for **SMM panel providers**, **social media marketing services**, and **SMM resellers** who need reliable, rotating IPv6 addresses for their operations. Whether you're providing **Instagram followers**, **Twitter followers**, **TikTok followers**, **YouTube views**, or any other **social media marketing services**, this tool ensures smooth and uninterrupted service delivery.
+This is the **slave connector component** that runs on servers with IPv6 subnets configured. It connects to the master proxy server and routes traffic through specific IPv6 addresses for **SMM panel providers**, **social media marketing services**, and **SMM resellers**.
 
 ## 💼 Powered by HeySMMReseller - Your Premium SMM Provider
 
@@ -65,7 +65,34 @@ We provide **pre-configured IPv6 /29 subnets** perfect for:
 
 ## 🔧 Technical Overview
 
-This Node.js-based proxy server enables dynamic IPv6 address selection from configured subnets, perfect for SMM providers who need IP rotation for their social media marketing services.
+This is the **IPv6 tunnel connector (slave)** that runs on servers with IPv6 subnets configured. It's part of a distributed proxy architecture for SMM operations.
+
+### Architecture Components
+
+**Complete System Requires:**
+
+1. **Master Proxy Server** ([smm-panel-proxy-master](https://github.com/heysmmprovider/smm-panel-proxy-master))
+   - Accepts proxy connections from users
+   - Manages slave connections
+   - Routes traffic through appropriate slaves
+
+2. **This Repository (Slave Connector)**
+   - Runs on IPv6-enabled servers
+   - Connects to master via WebSocket
+   - Routes traffic through specific IPv6 addresses
+   - Handles actual IPv6 traffic tunneling
+
+### How It Works
+
+1. **This connector** runs on your IPv6 server with subnets configured
+2. **Connects** to master proxy server via WebSocket (port 3000)
+3. **Receives** routing requests with specific IPv6 addresses to use
+4. **Routes** the traffic through the requested IPv6 address
+5. **Returns** responses back through the tunnel to the master
+
+⚠️ **Important**: This is the SLAVE component. Users don't connect directly to this - they connect to the master proxy server.
+
+**Need the complete setup?** Contact [HeySMMReseller.com](https://heysmmreseller.com) for pre-configured servers with both components installed!
 
 ### Key Features:
 - 🔄 **Dynamic IPv6 Selection** - Rotate IPs for each SMM service request
@@ -78,52 +105,43 @@ This Node.js-based proxy server enables dynamic IPv6 address selection from conf
 
 ## 📦 Installation
 
+### Prerequisites
+
+- ✅ Server with IPv6 subnets configured
+- ✅ Node.js 14+ installed
+- ✅ Master proxy server running ([get it here](https://github.com/heysmmprovider/smm-panel-proxy-master))
+
 ### Option 1: Using Docker (Recommended) 🐳
 
 ```bash
-# Pull the image from Docker Hub
+# Pull the slave connector image
 docker pull heysmmprovider/smm-panel-ipv6-proxy
 
-# Run the container
+# Run the connector with your master proxy server address
 docker run -d \
-  --name smm-proxy \
-  -p 8080:8080 \
-  -p 3000:3000 \
-  -e PROXY_PORT=8080 \
-  -e WS_PORT=3000 \
+  --name ipv6-connector \
+  --network host \
+  -e PROXY_SERVER=ws://your-master-proxy:3000 \
   heysmmprovider/smm-panel-ipv6-proxy
 ```
 
 **Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
 
-### Option 2: Using Docker Compose
-
-```yaml
-version: '3.8'
-services:
-  smm-proxy:
-    image: heysmmprovider/smm-panel-ipv6-proxy
-    container_name: smm-panel-proxy
-    ports:
-      - "8080:8080"
-      - "3000:3000"
-    environment:
-      - PROXY_PORT=8080
-      - WS_PORT=3000
-    restart: unless-stopped
-```
-
-### Option 3: Manual Installation
+### Option 2: Manual Installation
 
 ```bash
-# Clone the repository
+# Clone this repository on your IPv6 server
 git clone https://github.com/heysmmprovider/smm-panel-ipv6-proxy.git
 cd smm-panel-ipv6-proxy
 
 # Install dependencies
 npm install
 
-# Start the server
+# Configure your master proxy server
+cp .env.example .env
+# Edit .env and set PROXY_SERVER=ws://your-master-proxy:3000
+
+# Start the connector
 npm start
 ```
 
@@ -131,18 +149,10 @@ npm start
 
 ## 🚀 Quick Start Guide
 
-### 1. Quick Deploy with Docker 🐳
+### Step 1: Configure IPv6 Subnets on Your Server
 
 ```bash
-docker run -d --name smm-proxy -p 8080:8080 -p 3000:3000 heysmmprovider/smm-panel-ipv6-proxy
-```
-
-**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
-
-### 2. Server Setup (Pre-configured if you purchase from us!)
-
-```bash
-# Example: Adding IPv6 subnets to your server
+# Add IPv6 subnets to your network interface
 sudo ip -6 addr add 2a13:3380::2/29 dev eno2
 sudo ip -6 route add default via 2a13:3380::1 dev eno2
 
@@ -153,31 +163,35 @@ sudo ip -6 addr add 2a0f:a00::2/29 dev eno2
 sudo ip -6 route add default via 2a0f:a00::1 dev eno2
 ```
 
-### 3. Client Configuration for SMM Operations
+### Step 2: Deploy the Slave Connector
 
-```javascript
-// Example: Using for Instagram follower delivery
-const proxyUrl = 'http://username:2a13:3380:0:0:0:1@your-server:8080';
-
-// Your SMM panel can now route requests through specific IPv6 addresses
-// Perfect for Instagram, TikTok, Twitter API calls
+```bash
+# Quick deploy with Docker
+docker run -d \
+  --name ipv6-connector \
+  --network host \
+  -e PROXY_SERVER=ws://your-master-proxy:3000 \
+  heysmmprovider/smm-panel-ipv6-proxy
 ```
 
-### 3. Using the Proxy in Your Applications
+**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
+
+### Step 3: Verify Connection
+
+The connector will automatically:
+- Connect to your master proxy server
+- Report available IPv6 addresses
+- Start routing traffic through specified IPs
+
+### Step 4: Users Connect to Master Proxy
+
+Users should connect to the **master proxy server** (not this connector):
 
 ```javascript
-// Example: Route your application requests through specific IPv6
-const HttpsProxyAgent = require('https-proxy-agent');
-const axios = require('axios');
+// Users connect to master proxy, specifying which IPv6 to use
+const proxyUrl = 'http://username:2a13:3380:0:0:0:1@master-proxy:8080';
 
-// Select which IPv6 address to use from your subnet
-const proxyUrl = 'http://user:2a13:3380:0:0:0:1@your-server:8080';
-const agent = new HttpsProxyAgent(proxyUrl);
-
-// Make requests using this specific IPv6 address
-const response = await axios.get('https://api.example.com/endpoint', {
-    httpsAgent: agent
-});
+// The master proxy routes through this connector using the specified IPv6
 ```
 
 ---
@@ -211,6 +225,17 @@ const response = await axios.get('https://api.example.com/endpoint', {
 3. **Cost-Effective** - Better prices than mainstream SMM providers
 4. **Technical Support** - We understand SMM panel requirements
 5. **API Ready** - Integrate with any SMM panel software
+
+---
+
+## 🔗 Master Proxy Server
+
+This connector requires the master proxy server to function. The master proxy:
+- Accepts connections from users (port 8080)
+- Manages multiple slave connectors like this one
+- Routes traffic through the appropriate slave based on IPv6 selection
+
+**Get the Master Proxy:** [github.com/heysmmprovider/smm-panel-proxy-master](https://github.com/heysmmprovider/smm-panel-proxy-master)
 
 ---
 
