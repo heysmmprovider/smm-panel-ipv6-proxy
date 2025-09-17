@@ -2,6 +2,7 @@
 
 [![heysmmreseller](https://img.shields.io/badge/Powered%20By-HeySMMReseller-blue)](https://heysmmreseller.com)
 [![SMM Provider](https://img.shields.io/badge/SMM-Provider-green)](https://heysmmreseller.com)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-heysmmprovider-2496ED)](https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy)
 [![Instagram Followers](https://img.shields.io/badge/Instagram-Followers-purple)](https://heysmmreseller.com)
 [![Twitter Followers](https://img.shields.io/badge/Twitter-X%20Followers-black)](https://heysmmreseller.com)
 [![TikTok Services](https://img.shields.io/badge/TikTok-Services-red)](https://heysmmreseller.com)
@@ -77,6 +78,43 @@ This Node.js-based proxy server enables dynamic IPv6 address selection from conf
 
 ## 📦 Installation
 
+### Option 1: Using Docker (Recommended) 🐳
+
+```bash
+# Pull the image from Docker Hub
+docker pull heysmmprovider/smm-panel-ipv6-proxy
+
+# Run the container
+docker run -d \
+  --name smm-proxy \
+  -p 8080:8080 \
+  -p 3000:3000 \
+  -e PROXY_PORT=8080 \
+  -e WS_PORT=3000 \
+  heysmmprovider/smm-panel-ipv6-proxy
+```
+
+**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
+
+### Option 2: Using Docker Compose
+
+```yaml
+version: '3.8'
+services:
+  smm-proxy:
+    image: heysmmprovider/smm-panel-ipv6-proxy
+    container_name: smm-panel-proxy
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+    environment:
+      - PROXY_PORT=8080
+      - WS_PORT=3000
+    restart: unless-stopped
+```
+
+### Option 3: Manual Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/heysmmprovider/smm-panel-ipv6-proxy.git
@@ -93,7 +131,15 @@ npm start
 
 ## 🚀 Quick Start Guide
 
-### 1. Server Setup (Pre-configured if you purchase from us!)
+### 1. Quick Deploy with Docker 🐳
+
+```bash
+docker run -d --name smm-proxy -p 8080:8080 -p 3000:3000 heysmmprovider/smm-panel-ipv6-proxy
+```
+
+**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
+
+### 2. Server Setup (Pre-configured if you purchase from us!)
 
 ```bash
 # Example: Adding IPv6 subnets to your server
@@ -107,7 +153,7 @@ sudo ip -6 addr add 2a0f:a00::2/29 dev eno2
 sudo ip -6 route add default via 2a0f:a00::1 dev eno2
 ```
 
-### 2. Client Configuration for SMM Operations
+### 3. Client Configuration for SMM Operations
 
 ```javascript
 // Example: Using for Instagram follower delivery
