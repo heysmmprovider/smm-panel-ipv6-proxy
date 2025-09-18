@@ -111,23 +111,7 @@ This is the **IPv6 tunnel connector (slave)** that runs on servers with IPv6 sub
 - ✅ Node.js 14+ installed
 - ✅ Master proxy server running ([get it here](https://github.com/heysmmprovider/smm-panel-proxy-master))
 
-### Option 1: Using Docker (Recommended) 🐳
-
-```bash
-# Pull the slave connector image
-docker pull heysmmprovider/smm-panel-ipv6-proxy
-
-# Run the connector with your master proxy server address
-docker run -d \
-  --name ipv6-connector \
-  --network host \
-  -e PROXY_SERVER=ws://your-master-proxy:3000 \
-  heysmmprovider/smm-panel-ipv6-proxy
-```
-
-**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
-
-### Option 2: Manual Installation
+### Recommended: Manual Installation
 
 ```bash
 # Clone this repository on your IPv6 server
@@ -166,15 +150,16 @@ sudo ip -6 route add default via 2a0f:a00::1 dev eno2
 ### Step 2: Deploy the Slave Connector
 
 ```bash
-# Quick deploy with Docker
-docker run -d \
-  --name ipv6-connector \
-  --network host \
-  -e PROXY_SERVER=ws://your-master-proxy:3000 \
-  heysmmprovider/smm-panel-ipv6-proxy
-```
+# Clone and install manually (recommended)
+git clone https://github.com/heysmmprovider/smm-panel-ipv6-proxy.git
+cd smm-panel-ipv6-proxy
+npm install
 
-**Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
+# Configure and run
+cp .env.example .env
+# Edit .env with your master proxy details
+npm start
+```
 
 ### Step 3: Verify Connection
 
@@ -293,6 +278,43 @@ Unlike other SMM providers who disappear after payment, **HeySMMReseller** (powe
 - **Dynamic IP** selection per request
 - **High concurrent** connection handling
 - **Low latency** response times
+
+---
+
+## ⚠️ Docker Support (Not Yet Available)
+
+### 🐳 Docker Status: UNTESTED - LIKELY NOT WORKING
+
+**Important Notice:** While Docker images are automatically deployed to Docker Hub during our CI/CD process, **the Docker functionality has NOT been tested and is probably not working correctly**. 
+
+We strongly recommend **NOT using Docker** for deployment at this time. Please use the manual installation method described above instead.
+
+### Why Docker Isn't Ready:
+- ❌ Docker configuration has not been tested
+- ❌ Network host mode may have issues with IPv6 routing
+- ❌ Environment variable handling is unverified
+- ❌ The automatic Docker Hub deployment is part of CI/CD but doesn't mean it's functional
+
+### Docker Hub Information:
+- **Docker Hub:** [https://hub.docker.com/r/heysmmprovider/smm-panel-ipv6-proxy](https://hub.docker.com/repository/docker/heysmmprovider/smm-panel-ipv6-proxy)
+- **Status:** Images are published automatically but NOT TESTED
+- **Recommendation:** DO NOT USE until testing is complete
+
+### If You Want to Try Docker (At Your Own Risk):
+```bash
+# THIS IS PROBABLY NOT WORKING - NOT RECOMMENDED
+# Only shown for reference - use manual installation instead!
+
+docker pull heysmmprovider/smm-panel-ipv6-proxy
+
+docker run -d \
+  --name ipv6-connector \
+  --network host \
+  -e PROXY_SERVER=ws://your-master-proxy:3000 \
+  heysmmprovider/smm-panel-ipv6-proxy
+```
+
+**⚠️ We will update this README once Docker support has been properly tested and verified. Until then, please use the manual installation method for reliable deployment.**
 
 ---
 
